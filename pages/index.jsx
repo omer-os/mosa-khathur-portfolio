@@ -2,20 +2,39 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { client } from "../data";
+import Head from "next/head";
 export default function Index({ featuredCertificate }) {
   console.log(featuredCertificate);
   return (
     <div>
+      <Head>
+        <title>Mosa Khadur</title>
+        <meta
+          name="description"
+          content="passionate and inspiring student with a strong dedication to learning and personal growth."
+        />
+        <meta
+          name="keywords"
+          content="personal website, web developer, perfusion, student, learning, personal growth, technologies, frameworks, online courses, tutorials"
+        />
+        <meta property="og:title" content="Mosa Khathur" />
+        <meta
+          property="og:description"
+          content="I am a passionate and inspiring student with a strong dedication to learning and personal growth."
+        />
+        <meta property="og:image" content="/images/me.jpeg" />
+      </Head>
+
       <section className="md:h-screen mt-20 md:mt-0 flex xl:max-w-[160vmin] max-w-[130vmin]  mx-auto justify-between items-center lg:px-0 px-10 md:flex-row flex-col-reverse">
         <div className="flex flex-col max-w-[35em] gap-3 sm:mr-2">
-          <div className="md:text-5xl text-3xl font-extrabold md:text-left text-center capitalize md:mt-0 mt-3">
+          <h1 className="md:text-5xl text-3xl font-extrabold md:text-left text-center capitalize md:mt-0 mt-3">
             welcome to my personal website
-          </div>
+          </h1>
 
-          <div className="text-zinc-400 md:text-left text-center md:text-lg">
+          <p className="text-zinc-400 md:text-left text-center md:text-lg">
             passionate and inspiring student with a strong dedication to
             learning and personal growth
-          </div>
+          </p>
 
           <div className="flex mt-3 gap-2 md:w-max w-full">
             <Link
@@ -25,19 +44,20 @@ export default function Index({ featuredCertificate }) {
               more about me
             </Link>
             <Link
-              href="/"
+              href="/certificates"
               className="p-2 px-4 rounded border transition-all text-zinc-400 capitalize sm:text-md text-xs flex-1 text-center md:flex-none border-zinc-700 active:scale-95 "
             >
-              my achivments
+              my certificates
             </Link>
           </div>
         </div>
 
-        <div className="md:h-[30em] md:w-[30em] w-[10em] h-[10em]">
-          <img
+        <div className="md:h-[30em] md:w-[30em] relative w-[10em] h-[10em]">
+          <Image
+            fill
             src="/images/me.jpeg"
             className="w-full rounded-full md:rounded-none  h-full object-cover"
-            alt=""
+            alt="image of me"
           />
         </div>
       </section>
@@ -46,15 +66,15 @@ export default function Index({ featuredCertificate }) {
           <Image
             src="/images/me.jpeg"
             className="rounded-xl border border-zinc-800 h-full w-full object-cover"
-            alt=""
+            alt="about me image"
             fill
           />
         </div>
         <div className="flex flex-col gap-3">
-          <div className="sm:text-3xl text-2xl capitalize font-bold">
+          <h1 className="sm:text-3xl text-2xl capitalize font-bold">
             about me
-          </div>
-          <div className="text-zinc-400">
+          </h1>
+          <p className="text-zinc-400">
             As a web developer and student of perfusion, I am always looking for
             ways to expand my knowledge and improve my skills. In my free time,
             I enjoy staying up-to-date with the latest technologies and
@@ -63,10 +83,10 @@ export default function Index({ featuredCertificate }) {
             using my knowledge and expertise to make a positive impact in the
             world, and I am always seeking out new opportunities to challenge
             myself and grow as a professional.
-          </div>
+          </p>
           <Link
             className="py-2 px-4 sm:mt-10 mt-6 bg-blue-600 rounded w-max capitalize"
-            href="/projects"
+            href="/certificates"
           >
             my achivments
           </Link>
@@ -91,26 +111,26 @@ export default function Index({ featuredCertificate }) {
                 "I have also demonstrated strong leadership skills through my involvement in various community development initiatives. I am able to inspire and motivate others to work towards a common goal, and am able to delegate tasks and responsibilities effectively.",
             },
           ].map((i, index) => (
-            <div key={index} className="flex gap-2 flex-col">
+            <article key={index} className="flex gap-2 flex-col">
               <div className="text-xl font-bold border border-zinc-700 rounded-xl flex items-center justify-center w-10 h-10 ">
                 {index + 1}
               </div>
-              <div className="text-xl mt-3 font-bold">{i.head}</div>
-              <div className="text-zinc-400">{i.subhead} </div>
-            </div>
+              <h3 className="text-xl mt-3 font-bold">{i.head}</h3>
+              <p className="text-zinc-400">{i.subhead} </p>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="lg:px-[5em] md:px-10 px-6 mt-10">
-        <div className="text-3xl text-center font-extrabold capitalize">
+      <section class="lg:px-[5em] md:px-10 px-6 mt-10">
+        <h2 class="text-3xl text-center font-extrabold capitalize">
           Featured certificates
-        </div>
+        </h2>
 
-        <div className="grid mt-8 sm:gap-10 gap-20 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+        <div class="grid mt-8 sm:gap-10 gap-20 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
           {featuredCertificate.map((i, index) => (
             <Link
-              href={`/${i.certificate.slug.current}`}
+              href={`/certificates/${i.certificate.slug.current}`}
               key={index}
               className="flex flex-col active:scale-95 transition-all hover:scale-105"
             >
@@ -119,15 +139,14 @@ export default function Index({ featuredCertificate }) {
                   src={i.certificate.coverImage.asset.url}
                   fill
                   className="object-cover"
+                  alt={i.certificate.title + " image"}
                 />
               </div>
-              <div className="flex capitalize flex-col">
-                <div className="text-2xl mt-3 font-extrabold line-clamp-1">
+              <div class="flex capitalize flex-col">
+                <h3 class="text-2xl mt-3 font-extrabold line-clamp-1">
                   {i.certificate.title}
-                </div>
-                <div className="text-zinc-400 mt-1 ">
-                  {i.certificate.subtitle}
-                </div>
+                </h3>
+                <p class="text-zinc-400 mt-1">{i.certificate.subtitle}</p>
               </div>
             </Link>
           ))}
