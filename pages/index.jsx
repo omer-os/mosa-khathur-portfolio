@@ -4,7 +4,7 @@ import React from "react";
 import { client } from "../data";
 import Head from "next/head";
 export default function Index({ featuredCertificate }) {
-  console.log(featuredCertificate);
+  // console.log(featuredCertificate);
   return (
     <div>
       <Head>
@@ -54,6 +54,7 @@ export default function Index({ featuredCertificate }) {
 
         <div className="md:h-[30em] md:w-[30em] relative w-[10em] h-[10em]">
           <Image
+            priority  
             fill
             src="/images/me.jpeg"
             className="w-full rounded-full md:rounded-none  h-full object-cover"
@@ -64,6 +65,7 @@ export default function Index({ featuredCertificate }) {
       <section className="py-20 px-[clamp(1em,7vw,10em)] bg-zinc-900/80 border border-zinc-800 items-center mt-20 flex lg:flex-row flex-col gap-10">
         <div className="img h-[25em] w-full lg:min-w-[clamp(2em,50vw,35em)] relative">
           <Image
+            priority  
             src="/images/me.jpeg"
             className="rounded-xl border border-zinc-800 h-full w-full object-cover"
             alt="about me image"
@@ -115,19 +117,19 @@ export default function Index({ featuredCertificate }) {
               <div className="text-xl font-bold border border-zinc-700 rounded-xl flex items-center justify-center w-10 h-10 ">
                 {index + 1}
               </div>
-              <h3 className="text-xl mt-3 font-bold">{i.head}</h3>
+              <h2 className="text-xl mt-3 font-bold">{i.head}</h2>
               <p className="text-zinc-400">{i.subhead} </p>
             </article>
           ))}
         </div>
       </section>
 
-      <section class="lg:px-[5em] md:px-10 px-6 mt-10">
-        <h2 class="text-3xl text-center font-extrabold capitalize">
+      <section className="lg:px-[5em] md:px-10 px-6 mt-10">
+        <h2 className="text-3xl text-center font-extrabold capitalize">
           Featured certificates
         </h2>
 
-        <div class="grid mt-8 sm:gap-10 gap-20 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+        <div className="grid mt-8 sm:gap-10 gap-20 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
           {featuredCertificate.map((i, index) => (
             <Link
               href={`/certificates/${i.certificate.slug.current}`}
@@ -142,11 +144,11 @@ export default function Index({ featuredCertificate }) {
                   alt={i.certificate.title + " image"}
                 />
               </div>
-              <div class="flex capitalize flex-col">
-                <h3 class="text-2xl mt-3 font-extrabold line-clamp-1">
+              <div className="flex capitalize flex-col">
+                <h3 className="text-2xl mt-3 font-extrabold line-clamp-1">
                   {i.certificate.title}
                 </h3>
-                <p class="text-zinc-400 mt-1">{i.certificate.subtitle}</p>
+                <p className="text-zinc-400 mt-1">{i.certificate.subtitle}</p>
               </div>
             </Link>
           ))}
@@ -175,5 +177,6 @@ export async function getStaticProps() {
     props: {
       featuredCertificate,
     },
+    revalidate: 10,
   };
 }

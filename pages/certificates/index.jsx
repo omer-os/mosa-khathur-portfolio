@@ -4,7 +4,7 @@ import { client } from "../../data";
 import Image from "next/image";
 
 export default function Index({ certificates }) {
-  console.log(certificates);
+  // console.log(certificates);
   return (
     <div className="">
       <div className="flex max-w-[25em] mx-auto px-2 flex-col">
@@ -29,6 +29,7 @@ export default function Index({ certificates }) {
                 src={i.coverImage.asset.url}
                 fill
                 className="object-cover"
+                alt={i.title}
               />
             </div>
             <div className="flex capitalize flex-col">
@@ -56,5 +57,6 @@ export async function getStaticProps() {
     props: {
       certificates,
     },
+    revalidate: 10,
   };
 }

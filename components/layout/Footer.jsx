@@ -19,6 +19,7 @@ export default function Footer() {
                 </h5>
                 <div className="mt-6 lg:mb-0 flex mb-6">
                   <Link
+                    aria-label="instagram link"
                     href="/"
                     className="flex bg-zinc-800 hover:bg-zinc-700 text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                     type="button"
@@ -37,6 +38,7 @@ export default function Footer() {
                     </svg>{" "}
                   </Link>
                   <Link
+                    aria-label="youtube"
                     href="/"
                     className="flex bg-zinc-800 hover:bg-zinc-700 text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                     type="button"
@@ -56,6 +58,7 @@ export default function Footer() {
                   </Link>
                   <Link
                     href="/"
+                    aria-label="linkedin"
                     className="flex bg-zinc-800 hover:bg-zinc-700 text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                     type="button"
                   >
@@ -73,6 +76,7 @@ export default function Footer() {
                     </svg>{" "}
                   </Link>
                   <Link
+                    aria-label="facebook"
                     href="/"
                     className="flex bg-zinc-800 hover:bg-zinc-700 text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                     type="button"
