@@ -123,6 +123,7 @@ $(function () {
   function openLb(i) { lastFocus = document.activeElement; show(i); $lb.removeClass("hidden").addClass("flex"); $html.css("overflow", "hidden"); $("#lbClose").trigger("focus"); }
   function closeLb() { $lb.addClass("hidden").removeClass("flex"); $html.css("overflow", ""); if (lastFocus) lastFocus.focus(); }
   $certs.on("click", function () { openLb($certs.index(this)); });
+  $(".cert-hero").on("click", function () { var i = parseInt($(this).data("index"), 10) || 0; openLb(i); });
   $("#lbClose").on("click", closeLb);
   $("#lbPrev").on("click", function () { show(index - 1); });
   $("#lbNext").on("click", function () { show(index + 1); });
