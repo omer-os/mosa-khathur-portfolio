@@ -3,8 +3,8 @@
   "short_name": "Mosa Albayati",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F5F7FB",
-  "theme_color": "#0A1020",
+  "background_color": "#F7F6F2",
+  "theme_color": "#F7F6F2",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },

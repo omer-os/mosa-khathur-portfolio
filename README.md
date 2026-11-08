@@ -9,7 +9,9 @@ Plain **HTML + Tailwind CSS + jQuery**. No framework, no build step at deploy ti
 
 ```
 public/            ← the website (deployed as-is)
-  index.html
+  index.html          → /
+  experience.html     → /experience
+  certificates.html   → /certificates
   404.html
   assets/css/styles.css   ← compiled Tailwind (committed)
   assets/js/main.js       ← jQuery interactions
@@ -21,7 +23,7 @@ vercel.json        ← static deploy config (serves /public)
 ```
 
 ## Editing
-1. Edit `public/index.html`.
+1. Edit the page in `public/` (header and footer are repeated in each page — keep them in sync).
 2. If you used new Tailwind classes, rebuild the CSS:
    ```bash
    npm install && npm run build:css

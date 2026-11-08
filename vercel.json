@@ -5,9 +5,9 @@
   "buildCommand": "echo 'static site - prebuilt css'",
   "outputDirectory": "public",
   "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
-    { "source": "/certificates", "destination": "/#certificates", "permanent": true },
-    { "source": "/certificates/:slug", "destination": "/#certificates", "permanent": true }
+    { "source": "/certificates/:slug", "destination": "/certificates", "permanent": true }
   ],
   "headers": [
     {

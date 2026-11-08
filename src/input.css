@@ -3,45 +3,54 @@
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
-  body { @apply bg-paper text-ink antialiased font-sans; text-rendering: optimizeLegibility; }
-  ::selection { @apply bg-pulse-100 text-ink; }
-  :focus-visible { @apply outline-none ring-2 ring-pulse-500 ring-offset-2 ring-offset-paper rounded-md; }
-  section[id] { scroll-margin-top: 6rem; }
+  html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+  body { @apply bg-paper font-sans text-ink antialiased; font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility; }
+  ::selection { background: #131416; color: #F7F6F2; }
+  :focus-visible { outline: 2px solid #131416; outline-offset: 3px; border-radius: 2px; }
+  [id] { scroll-margin-top: 6rem; }
+  img { -webkit-user-drag: none; }
 }
 
 @layer components {
-  .grid-bg {
-    background-image:
-      linear-gradient(to right, rgba(10,16,32,.055) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(10,16,32,.055) 1px, transparent 1px);
-    background-size: 44px 44px;
-  }
-  .grid-bg-dark {
-    background-image:
-      linear-gradient(to right, rgba(103,232,249,.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(103,232,249,.07) 1px, transparent 1px);
-    background-size: 32px 32px;
-  }
-  .label { @apply font-mono text-[11px] uppercase tracking-[.18em] text-slate-500; }
-  .eyebrow { @apply inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.2em] text-pulse-700; }
-  .eyebrow::before { content: ""; @apply h-px w-6 bg-pulse-600; }
-  .card { @apply rounded-3xl border border-slate-200/80 bg-white shadow-soft; }
-  .chip { @apply inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[13px] font-medium text-slate-700 transition hover:border-pulse-300 hover:text-pulse-700; }
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition active:scale-[.97]; }
-  .btn-primary { @apply btn bg-ink text-white hover:bg-ink-700 shadow-lift; }
-  .btn-ghost { @apply btn border border-slate-300 bg-white/70 text-ink backdrop-blur hover:border-ink; }
-  .nav-link { @apply rounded-full px-3.5 py-2 text-[13px] font-medium text-slate-600 transition hover:text-ink; }
-  .nav-link.is-active { @apply bg-ink text-white hover:text-white; }
-  .hud-corner { @apply pointer-events-none absolute h-5 w-5 border-pulse-300; }
-  .text-gradient { @apply bg-gradient-to-r from-pulse-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent; }
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
-  .reveal.is-in { opacity: 1; transform: none; }
+  .wrap { @apply mx-auto w-full max-w-page px-5 sm:px-8 lg:px-10; }
+  .display { @apply font-serif font-normal leading-[.92] tracking-display; }
+  .kicker { @apply text-[13px] font-medium text-mute; }
+  .meta { @apply font-mono text-[12px] uppercase tracking-[.08em] text-mute; }
+  .rule { @apply border-t border-line; }
+
+  /* Underline that draws in on hover */
+  .link { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .45s cubic-bezier(.2,.7,.2,1); }
+  .link:hover, .link:focus-visible { background-size: 100% 1px; }
+  .link-static { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; transition: background-size .45s cubic-bezier(.2,.7,.2,1), color .2s; }
+  .link-static:hover { background-size: 0 1px; background-position: 100% 100%; }
+
+  .arrow { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  a:hover .arrow, button:hover .arrow { transform: translateX(4px); }
+
+  .nav-item { @apply relative py-1 text-[14px] text-mute transition-colors hover:text-ink; }
+  .nav-item[aria-current="page"] { @apply text-ink; }
+  .nav-item[aria-current="page"]::after { content: ""; @apply absolute -bottom-0.5 left-0 h-px w-full bg-ink; }
+
+  .row { @apply grid gap-y-3 border-t border-line py-8 sm:py-10 md:grid-cols-12 md:gap-x-8; }
+
+  .frame { @apply bg-white p-3 ring-1 ring-line transition duration-500 sm:p-4; }
 }
+
+/* ECG sweep */
+.ecg-base { stroke: #E2DFD8; }
+.ecg-sweep { stroke: #B3261E; stroke-dasharray: var(--seg, 160px) var(--len, 2000px); stroke-dashoffset: var(--seg, 160px); animation: sweep var(--dur, 6s) linear infinite; }
+@keyframes sweep { to { stroke-dashoffset: calc(-1 * var(--len, 2000px)); } }
+
+/* Page + reveal motion (only when JS is on, so content is never hidden without it) */
+.js body { animation: pagein .7s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes pagein { from { opacity: 0; } to { opacity: 1; } }
+.js body.is-leaving { opacity: 0; transition: opacity .28s ease; }
+.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); }
+.js .reveal.is-in { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; transform: none; }
+  .js body, .ecg-sweep { animation: none !important; }
+  .ecg-sweep { stroke-dasharray: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
 }
-.no-js .reveal { opacity: 1; transform: none; }
