@@ -26,7 +26,7 @@ vercel.json        ← static deploy config (serves /public)
 1. Edit the page in `public/` (header and footer are repeated in each page — keep them in sync).
 2. If you used new Tailwind classes, rebuild the CSS:
    ```bash
-   npm install && npm run build:css
+   npm install && npm run build   # builds CSS + stamps ?v= cache-busting hashes
    ```
 3. Preview locally: `npx serve public`
 4. Commit and push — Vercel deploys automatically.

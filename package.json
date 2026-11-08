@@ -1,11 +1,13 @@
 {
   "name": "mosa-albayati-portfolio",
   "private": true,
-  "description": "Static portfolio for Mosa Albayati — HTML, Tailwind CSS, jQuery.",
+  "description": "Static portfolio for Mosa Albayati \u2014 HTML, Tailwind CSS, jQuery.",
   "scripts": {
     "build:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/styles.css --minify",
     "watch:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/styles.css --watch",
-    "serve": "npx serve public"
+    "serve": "npx serve public",
+    "stamp": "node scripts/stamp.js",
+    "build": "npm run build:css && npm run stamp"
   },
   "devDependencies": {
     "tailwindcss": "3.4.17"
