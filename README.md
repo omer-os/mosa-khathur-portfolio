@@ -1,51 +1,30 @@
-# Mosa's Website
+# Mosa Albayati — Portfolio
 
-Welcome to Mosa's website! This is a portfolio and blog platform where Mosa shares his professional achievements, interests, and insights.
+Personal site for **Mosa Albayati**, clinical perfusion trainee (M.Sc. Cardiovascular Perfusion, Ankara University).
 
-## Features
+Live: https://mosa-khathur-portfolio.vercel.app
 
-- Display Mosa's professional profile, including his education, skills, and experience
-- Showcase Mosa's portfolio of projects and achievements
-- Share Mosa's thoughts and insights through a blog section
-- Provide a contact form for visitors to get in touch with Mosa
+## Stack
+Plain **HTML + Tailwind CSS + jQuery**. No framework, no build step at deploy time.
 
-## Technologies
+```
+public/            ← the website (deployed as-is)
+  index.html
+  404.html
+  assets/css/styles.css   ← compiled Tailwind (committed)
+  assets/js/main.js       ← jQuery interactions
+  assets/img, assets/certificates, assets/cv
+  robots.txt, sitemap.xml, og-image.jpg, favicon.svg, site.webmanifest
+src/input.css      ← Tailwind source
+tailwind.config.js
+vercel.json        ← static deploy config (serves /public)
+```
 
-This website is built using the following technologies:
-
-- [Next.js](https://nextjs.org/) for server-rendered React applications
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- [Sanity.io](https://www.sanity.io/) for the backend and content management
-- [Framer Motion](https://www.framer.com/motion/) for animations
-
-## Development
-
-To set up the development environment for this website, follow these steps:
-
-1. Clone the repository:
-
-
-
-
-git clone https://github.com/<your-username>/mosa-website.git
-
-
-2. Install the dependencies:
-
-npm install
-
-
-3. Run the development server:
-
-npm run dev
-
-
-The website will be available at `http://localhost:3000`.
-
-## Deployment
-
-This website is deployed using [Vercel](https://vercel.com/). To deploy the website to Vercel, follow these steps:
-
-1. [Sign up](https://vercel.com/signup) for a Vercel account and install the Vercel CLI.
-
-
+## Editing
+1. Edit `public/index.html`.
+2. If you used new Tailwind classes, rebuild the CSS:
+   ```bash
+   npm install && npm run build:css
+   ```
+3. Preview locally: `npx serve public`
+4. Commit and push — Vercel deploys automatically.

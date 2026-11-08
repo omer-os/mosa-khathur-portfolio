@@ -1,24 +1,13 @@
 {
-  "name": "mosa",
-  "version": "0.1.0",
+  "name": "mosa-albayati-portfolio",
   "private": true,
+  "description": "Static portfolio for Mosa Albayati — HTML, Tailwind CSS, jQuery.",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/styles.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/styles.css --watch",
+    "serve": "npx serve public"
   },
-  "dependencies": {
-    "@next/font": "13.1.1",
-    "@sanity/client": "^3.4.1",
-    "@sanity/image-url": "^1.0.1",
-    "@tailwindcss/line-clamp": "^0.4.2",
-    "autoprefixer": "^10.4.13",
-    "next": "13.1.1",
-    "next-sanity": "^3.1.8",
-    "postcss": "^8.4.20",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "^3.2.4"
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
   }
 }

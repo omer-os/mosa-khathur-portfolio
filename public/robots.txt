@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mosa-khathur-portfolio.vercel.app/sitemap.xml
