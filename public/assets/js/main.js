@@ -2,84 +2,116 @@
 $(function () {
   "use strict";
 
-  var $win = $(window);
-  var $body = $("body");
+  var $win = $(window), $body = $("body");
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  /* ---------- Footer year + Ankara local time ---------- */
   $("#year").text(new Date().getFullYear());
+  function tick() {
+    try {
+      $("#clock").text(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Istanbul" }).format(new Date()));
+    } catch (e) { $("#clock").parent().find("#clock").remove(); }
+  }
+  tick(); setInterval(tick, 30000);
 
-  /* ---------- Header hairline once scrolled ---------- */
-  var $header = $("#siteHeader");
-  function onScroll() { $header.toggleClass("border-line", $win.scrollTop() > 8).toggleClass("border-transparent", $win.scrollTop() <= 8); }
-  $win.on("scroll", onScroll);
-  onScroll();
+  /* ---------- Nav turns to glass once scrolled ---------- */
+  var $nav = $("#navBar");
+  function onScroll() {
+    var s = $win.scrollTop() > 10;
+    $nav.toggleClass("glass", s).toggleClass("border-transparent", !s);
+  }
+  $win.on("scroll", onScroll); onScroll();
 
   /* ---------- Mobile menu ---------- */
-  var $menu = $("#mobileMenu");
+  var $menu = $("#mobileMenu"), $menuBtn = $("#menuBtn");
   function setMenu(open) {
-    $menu.toggleClass("hidden", !open).toggleClass("flex", open);
-    $("#menuBtn").attr("aria-expanded", String(open));
-    $body.css("overflow", open ? "hidden" : "");
-    if (open) $("#menuClose").trigger("focus"); else $("#menuBtn").trigger("focus");
+    $menu.toggleClass("hidden", !open);
+    $menuBtn.attr({ "aria-expanded": String(open), "aria-label": open ? "Close menu" : "Open menu" });
+    $menuBtn.find(".i-open").toggleClass("hidden", open);
+    $menuBtn.find(".i-close").toggleClass("hidden", !open);
   }
-  $("#menuBtn").on("click", function () { setMenu(true); });
-  $("#menuClose").on("click", function () { setMenu(false); });
+  $menuBtn.on("click", function () { setMenu($menu.hasClass("hidden")); });
   $menu.on("click", "a", function () { setMenu(false); });
-  $win.on("resize", function () { if ($win.width() >= 768 && !$menu.hasClass("hidden")) setMenu(false); });
+  $win.on("resize", function () { if ($win.width() >= 768) setMenu(false); });
 
   /* ---------- Reveal on scroll ---------- */
   var $reveals = $(".reveal");
   if ("IntersectionObserver" in window && !reduceMotion) {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { $(e.target).addClass("is-in"); io.unobserve(e.target); }
-      });
+      entries.forEach(function (e) { if (e.isIntersecting) { $(e.target).addClass("is-in"); io.unobserve(e.target); } });
     }, { rootMargin: "0px 0px -6% 0px", threshold: 0.06 });
     $reveals.each(function () { io.observe(this); });
-  } else {
-    $reveals.addClass("is-in");
-  }
+  } else { $reveals.addClass("is-in"); }
 
-  /* ---------- ECG line: drawn to fit its width, with a travelling sweep ---------- */
+  /* ---------- ECG traces: drawn to fit each container, with a travelling sweep ---------- */
   function drawEcg() {
     $(".ecg svg").each(function () {
       var $svg = $(this);
-      var w = Math.max(320, Math.round($svg.width()));
-      var h = 56, base = 38, beat = w < 640 ? 170 : 240;
-      var d = "M0 " + base, x = 0;
-      // one PQRST complex, relative to the start of each beat
-      var shape = [[.30, 0], [.34, -4], [.38, 0], [.44, 0], [.46, 3], [.49, -34], [.52, 14], [.55, 0], [.66, 0], [.72, -7], [.78, 0], [1, 0]];
+      var w = Math.max(120, Math.round($svg.width())), h = Math.max(24, Math.round($svg.height()));
+      var base = h * 0.68, amp = h * 0.62, beat = Math.max(90, Math.min(220, w / 3.2));
+      var shape = [[.30, 0], [.34, -.07], [.38, 0], [.44, 0], [.46, .06], [.49, -1], [.52, .32], [.55, 0], [.66, 0], [.72, -.16], [.78, 0], [1, 0]];
+      var d = "M0 " + base.toFixed(1), x = 0;
       while (x < w) {
         for (var i = 0; i < shape.length; i++) {
           var px = Math.min(w, x + shape[i][0] * beat);
-          d += " L" + px.toFixed(1) + " " + (base + (px >= w ? 0 : shape[i][1]));
+          d += " L" + px.toFixed(1) + " " + (px >= w ? base : base + shape[i][1] * amp).toFixed(1);
           if (px >= w) break;
         }
         x += beat;
       }
       $svg.attr({ viewBox: "0 0 " + w + " " + h, preserveAspectRatio: "none" });
       $svg.html(
-        '<path class="ecg-base" d="' + d + '" fill="none" stroke-width="1" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>' +
-        '<path class="ecg-sweep" d="' + d + '" fill="none" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>'
+        '<path class="ecg-base" d="' + d + '" fill="none" stroke-width="1.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>' +
+        '<path class="ecg-sweep" d="' + d + '" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>'
       );
       var len = $svg.find(".ecg-sweep")[0].getTotalLength();
-      $svg.find(".ecg-sweep").css({ "--len": len.toFixed(0) + "px", "--seg": Math.round(beat * 1.1) + "px", "--dur": (w / 160).toFixed(1) + "s" });
+      $svg.find(".ecg-sweep").css({ "--len": len.toFixed(0) + "px", "--seg": Math.round(beat * 1.15) + "px", "--dur": Math.max(2.4, w / 150).toFixed(1) + "s" });
     });
   }
   drawEcg();
-  var resizeT;
-  $win.on("resize", function () { clearTimeout(resizeT); resizeT = setTimeout(drawEcg, 150); });
+  var rT; $win.on("resize", function () { clearTimeout(rT); rT = setTimeout(drawEcg, 150); });
 
-  /* ---------- Soft page transitions between internal pages ---------- */
+  /* ---------- Hero parallax (mouse) ---------- */
+  var $stage = $("#heroStage");
+  if ($stage.length && finePointer && !reduceMotion) {
+    var $layers = $stage.find(".parallax");
+    $("section:has(#heroStage)").on("mousemove", function (e) {
+      var r = $stage[0].getBoundingClientRect();
+      var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+      $layers.each(function () {
+        var d = parseFloat($(this).data("depth")) || 0;
+        $(this).css("transform", "translate3d(" + (dx * d).toFixed(1) + "px," + (dy * d).toFixed(1) + "px,0)");
+      });
+    }).on("mouseleave", function () { $layers.css("transform", ""); });
+  }
+
+  /* ---------- Perfusion circuit ---------- */
+  var $nodes = $(".node"), $chips = $(".c-chip"), $panels = $(".c-panel");
+  function select(key) {
+    if (!$panels.filter("[data-panel='" + key + "']").length) key = "overview";
+    $panels.addClass("hidden").filter("[data-panel='" + key + "']").removeClass("hidden").hide().fadeIn(220);
+    $nodes.removeClass("is-active").attr("aria-pressed", "false").filter("[data-node='" + key + "']").addClass("is-active").attr("aria-pressed", "true");
+    $chips.removeClass("!border-ink !bg-ink !text-white").filter("[data-node='" + key + "']").addClass("!border-ink !bg-ink !text-white");
+  }
+  if ($panels.length) {
+    $nodes.on("click", function () { select($(this).data("node")); });
+    $nodes.on("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select($(this).data("node")); } });
+    if (finePointer) $nodes.on("mouseenter", function () { select($(this).data("node")); });
+    $chips.on("click", function () { select($(this).data("node")); });
+    select("overview");
+  }
+
+  /* ---------- Soft page transitions ---------- */
   $(document).on("click", "a[href^='/']", function (e) {
-    var href = $(this).attr("href");
     if (reduceMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     if (this.hasAttribute("download") || this.target === "_blank") return;
-    var url = new URL(href, location.href);
-    if (url.pathname === location.pathname) return; // same-page anchors scroll normally
+    var href = $(this).attr("href"), url = new URL(href, location.href);
+    if (url.pathname === location.pathname) return;
     e.preventDefault();
     $body.addClass("is-leaving");
-    setTimeout(function () { location.href = href; }, 260);
+    setTimeout(function () { location.href = href; }, 230);
   });
   $win.on("pageshow", function () { $body.removeClass("is-leaving"); });
 
@@ -96,32 +128,17 @@ $(function () {
     $("#lbMeta").html($c.data("meta"));
     $("#lbCount").text(String(index + 1).padStart(2, "0") + " / " + String($certs.length).padStart(2, "0"));
   }
-  $lbImg.on("load", function () { $(this).css({ transition: "opacity .4s ease", opacity: 1 }); });
-
-  function openLb(i) {
-    lastFocus = document.activeElement;
-    show(i);
-    $lb.removeClass("hidden").addClass("flex");
-    $body.css("overflow", "hidden");
-    $("#lbClose").trigger("focus");
-  }
-  function closeLb() {
-    $lb.addClass("hidden").removeClass("flex");
-    $body.css("overflow", "");
-    if (lastFocus) lastFocus.focus();
-  }
+  $lbImg.on("load", function () { $(this).css({ transition: "opacity .35s ease", opacity: 1 }); });
+  function openLb(i) { lastFocus = document.activeElement; show(i); $lb.removeClass("hidden").addClass("flex"); $body.css("overflow", "hidden"); $("#lbClose").trigger("focus"); }
+  function closeLb() { $lb.addClass("hidden").removeClass("flex"); $body.css("overflow", ""); if (lastFocus) lastFocus.focus(); }
 
   $certs.on("click", function () { openLb($certs.index(this)); });
   $("#lbClose").on("click", closeLb);
   $("#lbPrev").on("click", function () { show(index - 1); });
   $("#lbNext").on("click", function () { show(index + 1); });
-  $lb.on("click", function (e) { if (e.target === this || $(e.target).is(".wrap:has(#lbImg)")) closeLb(); });
-
+  $lb.on("click", function (e) { if (e.target === this || e.target.id === "lbStage") closeLb(); });
   $(document).on("keydown", function (e) {
-    if ($lb.hasClass("hidden")) {
-      if (e.key === "Escape" && !$menu.hasClass("hidden")) setMenu(false);
-      return;
-    }
+    if ($lb.hasClass("hidden")) return;
     if (e.key === "Escape") closeLb();
     else if (e.key === "ArrowLeft") show(index - 1);
     else if (e.key === "ArrowRight") show(index + 1);
@@ -131,7 +148,6 @@ $(function () {
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
   });
-
   var startX = null;
   $lb.on("touchstart", function (e) { startX = e.originalEvent.touches[0].clientX; });
   $lb.on("touchend", function (e) {
