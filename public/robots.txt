@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mosa-khathur-portfolio.vercel.app/sitemap.xml
+Sitemap: https://mosa-albayati.vercel.app/sitemap.xml

@@ -2,7 +2,7 @@
 
 Personal site for **Mosa Albayati**, clinical perfusion trainee (M.Sc. Cardiovascular Perfusion, Ankara University).
 
-Live: https://mosa-khathur-portfolio.vercel.app
+Live: https://mosa-albayati.vercel.app
 
 ## Stack
 Plain **HTML + Tailwind CSS + jQuery**. No framework, no build step at deploy time.
